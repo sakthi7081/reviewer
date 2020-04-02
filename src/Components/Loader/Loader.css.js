@@ -31,7 +31,7 @@ const Rotate1 = keyframes`
 
 export const ColorBox = styled.div`
     animation: ${Rotate} 3s ease-in-out,${Rotate} 3s 3s ease-in-out reverse; 
-    background-color : #3f51b5; 
+    background-color : #424242; 
     float : right;
     width : 0%; 
     height : 100%;      

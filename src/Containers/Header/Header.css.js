@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
+
 export const HeaderBox = styled('div')({
-        textAlign: 'center'
+        textAlign: 'center'        
 })
 
 export const TextBox = styled('div')({
@@ -12,5 +13,6 @@ export const TextBox = styled('div')({
 export const StyledGrid =  styled('div')({
         float : 'right'      
 })
+
 
 

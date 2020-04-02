@@ -20,7 +20,7 @@ export const StyledBox = styled('div')({
 })
 
 export const StyledAvatar = styled(Avatar)`&&{
-        background-color : #3f51b5
+        background-color : #424242
 }`
 
 export const StyledButton = styled(Button)`
@@ -31,7 +31,7 @@ export const StyledButton = styled(Button)`
 export const LinkButton = styled.button`
         background: none!important;
         border: none;
-        padding: 0!important;        
+        padding: 4px !important;        
         font-family: arial, sans-serif; 
         float : ${props => props.float ? "right" : "left"};     
         color: #069;    
@@ -39,9 +39,12 @@ export const LinkButton = styled.button`
         cursor: pointer;
         &:hover{
                 text-decoration: underline;
-        }
+        }          
 `
 export const StyledLink = styled.div`
         margin-top : 10px; 
-        margin-bottom : 10px; 
+        margin-bottom : 10px;
+        @media (max-width: 360px) {
+                display : grid;
+            }  
 `

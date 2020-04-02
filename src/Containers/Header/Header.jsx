@@ -19,7 +19,7 @@ export default class Header extends React.Component{
 
         return (
         <HeaderBox>
-            <AppBar >
+            <AppBar position='sticky' color='primary'>
                 <Toolbar>  
                         <Hidden only="xs">                                           
                             <Grid item xs={2} >

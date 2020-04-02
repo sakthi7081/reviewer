@@ -22,8 +22,8 @@ export default function LoginModal(){
               </Tooltip>              
               <Styledmodal open={open} >
                   <Login close={handleModal}/>
-               </Styledmodal>
-          </div>
+              </Styledmodal>
+            </div>
         )
 }
 

@@ -3,12 +3,23 @@ import React from 'react';
 import MainPage from './Components/MainPage/MainPage';
 import {GlobalStyle} from './App.css';
 // import {APP_NAME } from  './Utilities/Constants';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main :'#424242'
+    }
+  }
+});
 
 function App() {
   return (
     <>  
           <GlobalStyle />
-          <MainPage />       
+          <ThemeProvider theme={theme}>
+              <MainPage />   
+          </ThemeProvider>              
     </>  
   );
 }

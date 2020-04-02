@@ -34,8 +34,8 @@ export default function SimpleMenu({menu = [],Icon}) {
         open={Boolean(anchorEl)}
         onClose={handleClose}>            
           {
-            menu.map(data => 
-              <MenuItem 
+            menu.map((data,i) => 
+              <MenuItem key={i}
               // disableGutters={true} dense={true}
               >{data.Component}</MenuItem>
           )}                                          

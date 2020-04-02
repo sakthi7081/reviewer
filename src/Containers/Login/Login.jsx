@@ -10,7 +10,7 @@ function Avatars({type}){
     return (
         <>
             <StyledBox>            
-                    <StyledAvatar >
+                    <StyledAvatar color='primary'>
                         <LockIcon color="inherit" />
                     </StyledAvatar>                                            
             </StyledBox> 
@@ -73,7 +73,7 @@ const LoginTab =  ({type,changeType, close}) => {
           </StyledButton>
           <StyledLink>
                 {type === Types[1] && 
-                <LinkButton href="#" variant="body2" color="primary">
+                <LinkButton>
                     Forgot password?
                 </LinkButton> 
                  }             
@@ -89,7 +89,7 @@ const LoginTab =  ({type,changeType, close}) => {
 export default class Login extends React.Component{
 
         state = { 
-            type : 0,
+            type : 1,
             name : '',
             password : ''
         }           
