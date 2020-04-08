@@ -21,7 +21,9 @@ export default function LoginModal(){
                   </IconButton>
               </Tooltip>              
               <Styledmodal open={open} >
+                  <>
                   <Login close={handleModal}/>
+                  </>
               </Styledmodal>
             </div>
         )

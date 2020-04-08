@@ -16,7 +16,7 @@ export const StyledCard = styled(Card)`
       }
 `
 
-export const Styledmodal = styled(Modal)({
+export const StyledModal = styled(Modal)({
       display : 'flex',
       alignItems : 'center',
       justifyContent : 'center'      

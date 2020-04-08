@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Button from '@material-ui/core/Button';
 
 
 export const HeaderBox = styled('div')({
@@ -13,6 +14,10 @@ export const TextBox = styled('div')({
 export const StyledGrid =  styled('div')({
         float : 'right'      
 })
+
+export const StyledButton = styled(Button)`
+               &&&{ padding : 0;    }
+`
 
 
 

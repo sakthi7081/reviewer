@@ -19,6 +19,10 @@ export const StyledBox = styled('div')({
         margin : '15px'               
 })
 
+export const WarningLabel = styled('label')`
+        color : red;
+`
+
 export const StyledAvatar = styled(Avatar)`&&{
         background-color : #424242
 }`

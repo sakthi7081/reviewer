@@ -1,11 +1,9 @@
 import React,{useState} from 'react';
-import {Styledmodal,StyledCard,StyledBox} from './WarningModal.css';
+import {StyledModal,StyledCard,StyledBox} from './WarningModal.css';
 import Login from '../../Containers/Login/Login';
 import CloseIcon from '@material-ui/icons/Close';
 import LockIcon from '@material-ui/icons/Lock';
 import {Divider,CardHeader,CardContent,Typography,IconButton,Button} from '@material-ui/core';
-
-// import {TextBox} from '../../Containers/Header/Header.css';
 
 const Warning = ({close,login}) => {
     return (
@@ -51,9 +49,11 @@ export default function WarningModal({type,handleModal}){
 
         return(
             <div>                      
-              <Styledmodal open={type} >  
+              <StyledModal open={type} >  
+                    <>
                     {open ?  <Login close={LoginModal}/> : <Warning login={LoginModal} close={handleModal}/>}                                   
-              </Styledmodal>
+                    </>
+              </StyledModal>
             </div>
         )
 }

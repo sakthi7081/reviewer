@@ -17,7 +17,7 @@ const MovieCard = ({movie}) => {
                     {movie.name}
                 </Typography>
                 <Typography variant="caption" display="block" gutterBottom>
-                    {`${movie.date} \u25CF ${movie.language}`}
+                    {`${(movie.date).toLocaleDateString()} \u25CF ${movie.language}`}
                 </Typography>               
                 <StyledRating                    
                     defaultValue={2}
