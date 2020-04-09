@@ -2,6 +2,23 @@ import styled from 'styled-components';
 import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+export const ButtonBox = styled('div')({
+        display : 'inline-flex'
+})
+
+export const ProgressButton = styled('div')({
+        position: 'relative'
+})
+
+export const Styledprogress = styled(CircularProgress)({        
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -8,
+        marginLeft: -12
+})
 
 export const StyledPaper = styled(Paper)   
         `&&&{

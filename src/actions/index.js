@@ -39,7 +39,7 @@ const getMovies = movies => ({
 
   export const signIn =(mail,password) => dispatch => {
     return collection('Users').findOne({email : mail, password : password})
-    .then(users => {if(users){dispatch(getUser(users));localStorage.setItem('users',JSON.stringify(users))}else{return 'Username/Password Error'}}
+    .then(users => {if(users){dispatch(getUser(users));localStorage.setItem('users',JSON.stringify(users))}else{return 'Invalid Username/Password'}}
     ).catch(err=> console.log(`login - ${err}`))
   }
 

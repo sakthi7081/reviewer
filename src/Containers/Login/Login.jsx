@@ -1,11 +1,14 @@
 import React from 'react';
-import {StyledPaper,StyledBox,StyledAvatar,StyledButton,StyledLink,LinkButton,WarningLabel} from './Login.css';
+import {StyledPaper,StyledBox,StyledAvatar,StyledButton,ProgressButton,ButtonBox,
+    StyledLink,LinkButton,WarningLabel,Styledprogress} from './Login.css';
 import LockIcon from '@material-ui/icons/LockOutlined';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import {signIn,validateMail,sigUp,passwordReset} from '../../actions';
 import md5 from 'md5';
 import { connect } from "react-redux"; 
+
+
 
 const Types = ['Sign Up', 'Sign In', 'Reset'];
 
@@ -29,80 +32,25 @@ function Avatars({type}){
     )
 }
 
-const LoginTab =  ({type,fields,changeType, close,data,error,valueChange,submit,errorlabel}) => {
-    return (
-        <>
-            <Avatars type={type} />
-            {errorlabel && <WarningLabel>{errorlabel}</WarningLabel>}
-            {fields.map(values => 
-                <TextField
-                key={values.name}
-                variant="outlined"
-                margin="normal"
-                required={true}
-                fullWidth={true}
-                id={values.name}
-                label={values.label}
-                name={values.name}      
-                value={data[values.name]}
-                error={error[values.name] === '' ? false : true}
-                helperText={error[values.name]}   
-                type={values.type}         
-                onChange={valueChange}                             
-                />
-            )}                         
-            <StyledButton
-                type="submit"                
-                variant="contained"
-                color="primary"   
-                onClick={submit}             
-                >
-            {type}
-          </StyledButton>
-          <StyledButton                               
-                margin={1}
-                variant="contained"
-                color="secondary"
-                onClick = {close}                
-                >
-            Cancel
-          </StyledButton>
-          <StyledLink>
-                {type === Types[1] && 
-                <LinkButton
-                onClick={() => changeType(2)}>
-                    Forgot password?
-                </LinkButton> 
-                 }             
-                <LinkButton float onClick={() => changeType(type === Types[0] ? 1 : 0)}>
-                    {type === Types[0] && "Already have an account? Sign in"}
-                    {type !== Types[0] && "Don't have an account? Sign Up"}
-                </LinkButton>                     
-          </StyledLink>                
-        </> 
-    )
+const getObjects = (array) => {
+    return array.reduce(
+        (obj, item) => ({
+          ...obj,
+          [item.name]: ''
+        }),
+        {}
+      )
 }
 
 class Login extends React.Component{
 
         state = { 
             type : 1,
-            data : (Fields.slice(1, 3)).reduce(
-                (obj, item) => ({
-                  ...obj,
-                  [item.name]: ''
-                }),
-                {}
-              ),
-            error : (Fields.slice(1, 3)).reduce(
-                (obj, item) => ({
-                  ...obj,
-                  [item.name]: ''
-                }),
-                {}
-              ),
+            data : getObjects(Fields.slice(1, 3)),
+            error : getObjects(Fields.slice(1, 3)),
             fields : Fields.slice(1, 3),
-            warning : ''
+            warning : '',
+            loading : false
         }           
         
         changePage = (value) => {
@@ -118,20 +66,8 @@ class Login extends React.Component{
             }                  
             this.setState({
                     type : value,
-                    data : fields.reduce(
-                        (obj, item) => ({
-                          ...obj,
-                          [item.name]: ''
-                        }),
-                        {}
-                      ),
-                    error : fields.reduce(
-                        (obj, item) => ({
-                          ...obj,
-                          [item.name]: ''
-                        }),
-                        {}
-                      ),      
+                    data : getObjects(fields),
+                    error : getObjects(fields),      
                     fields : fields,
                     warning : ''           
             });
@@ -179,7 +115,7 @@ class Login extends React.Component{
             const {error} = this.state;
             this.setState({
                 data: { ...this.state.data, [e.target.name]: e.target.value },
-                warning :''
+                warning :'',                
             });
             if(error[e.target.name]){
                 error[e.target.name] = '';
@@ -192,6 +128,7 @@ class Login extends React.Component{
 
         submit =async(e)=>{
             e.preventDefault();
+            this.setState({loading : true});
                 let error = await this.validateForm(this.state.data);                                       
                 if(!this.checkProperties(error)){
                     this.setState({error});
@@ -227,14 +164,68 @@ class Login extends React.Component{
                         this.setState({warning : result});                        
                     }                    
                 }
+                this.setState({loading : false});
         }
 
     render(){
-            const {type,data,error,fields,warning} = this.state;          
+            const {data,error,fields,warning,loading} = this.state; 
+            const type = Types[this.state.type] ; 
+            const {close} = this.props;     
         return(
-            <StyledPaper elevation={12}>
-                   <LoginTab type={Types[type]} close={this.props.close} valueChange={this.handleChange}
-                   changeType={this.changePage} data={data} fields={fields} errorlabel={warning} error={error} submit={this.submit}/>         
+            <StyledPaper elevation={12}>                       
+                <Avatars type={type} />
+                {warning && <WarningLabel>{warning}</WarningLabel>}
+                {fields.map(values => 
+                <TextField
+                key={values.name}
+                variant="outlined"
+                margin="normal"
+                required={true}
+                fullWidth={true}
+                id={values.name}
+                label={values.label}
+                name={values.name}      
+                value={data[values.name]}
+                error={error[values.name] === '' ? false : true}
+                helperText={error[values.name]}   
+                type={values.type}         
+                onChange={this.handleChange}                             
+                />
+            )}                                     
+            <ButtonBox>
+                <ProgressButton>
+                    <StyledButton
+                        type="submit"                
+                        variant="contained"
+                        color="primary"   
+                        disabled={loading}
+                        onClick={this.submit}             
+                        >
+                        {type}
+                    </StyledButton>
+                    {loading && <Styledprogress size={24}/>}
+                </ProgressButton>            
+                <StyledButton                               
+                        margin={1}
+                        variant="contained"
+                        color="secondary"
+                        onClick = {close}                
+                        >
+                    Cancel
+                </StyledButton>
+          </ButtonBox>
+          <StyledLink>
+                {type === Types[1] && 
+                <LinkButton
+                onClick={() => this.changePage(2)}>
+                    Forgot password?
+                </LinkButton> 
+                 }             
+                <LinkButton float onClick={() => this.changePage(type === Types[0] ? 1 : 0)}>
+                    {type === Types[0] && "Already have an account? Sign in"}
+                    {type !== Types[0] && "Don't have an account? Sign Up"}
+                </LinkButton>                     
+          </StyledLink> 
             </StyledPaper>
         )
     }

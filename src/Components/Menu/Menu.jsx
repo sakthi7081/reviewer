@@ -1,7 +1,7 @@
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 
 const Anchor = {vertical: 'bottom',horizontal: 'center'};
 
@@ -22,24 +22,22 @@ export default function SimpleMenu({menu = [],Icon}) {
     <div>
       <IconButton onClick={handleClick} size="small" color="inherit">
             {Icon}
-      </IconButton>
-      <Menu
-        id="simple-menu"
+      </IconButton>        
+      <Menu          
         anchorEl={anchorEl}
         keepMounted
         elevation={0}
-        getContentAnchorEl={null}
+        getContentAnchorEl={null}        
         anchorOrigin={Anchor}
         transformOrigin={TransForm}
         open={Boolean(anchorEl)}
         onClose={handleClose}>            
           {
             menu.map((data,i) => 
-              <MenuItem key={i}
-              // disableGutters={true} dense={true}
+              <MenuItem key={i}              
               >{data.Component}</MenuItem>
-          )}                                          
-      </Menu>
+          )}                                                          
+      </Menu>      
     </div>
   );
 }
