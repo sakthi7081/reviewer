@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
-import {StyledBox,StyledSearchBox,StyledButton} from './HomePage.css';
-import MovieCard from '../../Components/MovieCard/MovieCard';
+import {StyledBox,StyledSearchBox,StyledButton,StyledAlert} from './HomePage.css';
+import MovieCard,{MovieSkeleton} from '../../Components/MovieCard/MovieCard';
 import {SEARCH_PLACEHOLDER} from '../../Utilities/Constants';
 import Hidden from '@material-ui/core/Hidden';
 import SearchBar from '../../Components/SearchBar/SearchBar';
@@ -9,6 +9,7 @@ import AddIcon from '@material-ui/icons/Add';
 import WarningModal from '../../Components/WarningModal/WarningModal';
 import { connect } from "react-redux";
 import {getAllMovies} from '../../actions';
+import AddMovie from '../AddMovie/AddMovie';
 
 class HomePage extends Component {
             
@@ -30,7 +31,7 @@ class HomePage extends Component {
 
     render() {
         const {open} = this.state;
-        const {movies,logged} = this.props;
+        const {movies,logged,loading} = this.props;
         return (
             <StyledBox>
                 <Hidden  only={['sm','md','lg','xl']}>                    
@@ -49,17 +50,22 @@ class HomePage extends Component {
                     Add Movie
                 </StyledButton>
                 {!logged && <WarningModal type={open}  handleModal={this.changeWarningModel}/>}
-                {logged && open && <label>Add Movie</label>}
+                {logged && <AddMovie open={open} close={this.changeWarningModel}/>}
               <Grid container direction={'row'} spacing={2}>                
-                    {
+                    {!loading &&
                          movies.map(movie => 
                             <Grid key={movie._id} item xs={12}  sm={4} md={3} lg={3}>
                                  <MovieCard movie={movie}/> 
                             </Grid>
-                    )}                                                   
-             </Grid>
-                
-            </StyledBox>
+                    )}
+                    {loading && [0,1,2,3].map(movie => 
+                            <Grid key={movie} item xs={12}  sm={4} md={3} lg={3}>
+                                 <MovieSkeleton/> 
+                            </Grid>
+                    )}
+                    {!loading && movies.length < 1 && <StyledAlert severity="info">No movies found</StyledAlert>}    
+             </Grid>                        
+            </StyledBox>                                                                       
         );
     }
 }
@@ -67,7 +73,8 @@ class HomePage extends Component {
 const mapStateToProps = (state) => {       
     return {
       movies : state.home.movies,
-      logged : state.home.logged
+      logged : state.home.logged,
+      loading : state.home.loading
     }
   };
   

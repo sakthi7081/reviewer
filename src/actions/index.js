@@ -37,6 +37,10 @@ const getMovies = movies => ({
         return collection('Users').find({email : mail}).toArray().then(users => users.length > 0 ? true : false)
   }
 
+  export const validateMovie = (movie) => {
+    return collection('Movies').find({name : {$regex : `^${movie}$`, $options : 'i'}}).toArray().then(movies => movies.length > 0 ? true : false)
+  }
+
   export const signIn =(mail,password) => dispatch => {
     return collection('Users').findOne({email : mail, password : password})
     .then(users => {if(users){dispatch(getUser(users));localStorage.setItem('users',JSON.stringify(users))}else{return 'Invalid Username/Password'}}
@@ -49,8 +53,16 @@ export const sigUp =(user)=> dispatch => {
     ).catch(err=> console.log(`Signup - ${err}`))
 }
 
+export const createMovie =(movie)=> dispatch=>{  
+     collection('Movies').insertOne(movie)    
+    .then(data=> 
+          dispatch({type : types.CREATE_MOVIE,
+                movie : {_id: data.insertedId,...movie}})
+      ).catch(err=> console.log(`Movie Creation - ${err}`));
+}
+
 export const passwordReset =(mail,password) => {
-    return collection('Users').updateOne({email : mail},{$set:{password : password}})
+    return collection('Users').updateOne({email : mail},{$set:{password : password}})        
     .then(result => {
         const { matchedCount, modifiedCount } = result;
         if(matchedCount && modifiedCount) {
@@ -67,3 +79,18 @@ export const passwordReset =(mail,password) => {
       localStorage.setItem('Users','');
       localStorage.clear();
   }
+
+  export const checkProperties =(obj)=> {
+    for (var key in obj) {
+        if (obj[key] !== null && obj[key] !== "")
+            return false;
+    }
+    return true;
+}
+
+export const toBase64 = file => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = error => reject(error);
+});

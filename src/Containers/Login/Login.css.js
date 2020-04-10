@@ -5,7 +5,9 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const ButtonBox = styled('div')({
-        display : 'inline-flex'
+        display : 'inline-flex',
+        width : '100%',
+        justifyContent : 'center'
 })
 
 export const ProgressButton = styled('div')({
@@ -16,7 +18,7 @@ export const Styledprogress = styled(CircularProgress)({
         position: 'absolute',
         top: '50%',
         left: '50%',
-        marginTop: -8,
+        marginTop: -10,
         marginLeft: -12
 })
 
@@ -45,7 +47,9 @@ export const StyledAvatar = styled(Avatar)`&&{
 }`
 
 export const StyledButton = styled(Button)`
-       &&{ margin-top : 10px;width : 120px; 
+       &&{ margin-top : 10px;
+        width : 120px; 
+        margin-bottom : 10px;
         margin-left : ${props => props.margin ? "10px" : "0"} 
 `
 
@@ -62,8 +66,7 @@ export const LinkButton = styled.button`
                 text-decoration: underline;
         }          
 `
-export const StyledLink = styled.div`
-        margin-top : 10px; 
+export const StyledLink = styled.div`         
         margin-bottom : 10px;
         @media (max-width: 360px) {
                 display : grid;

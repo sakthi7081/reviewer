@@ -4,7 +4,7 @@ import {StyledPaper,StyledBox,StyledAvatar,StyledButton,ProgressButton,ButtonBox
 import LockIcon from '@material-ui/icons/LockOutlined';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import {signIn,validateMail,sigUp,passwordReset} from '../../actions';
+import {signIn,validateMail,sigUp,passwordReset,checkProperties} from '../../actions';
 import md5 from 'md5';
 import { connect } from "react-redux"; 
 
@@ -71,15 +71,7 @@ class Login extends React.Component{
                     fields : fields,
                     warning : ''           
             });
-        }
-
-        checkProperties(obj) {
-            for (var key in obj) {
-                if (obj[key] !== null && obj[key] !== "")
-                    return false;
-            }
-            return true;
-        }
+        }       
 
         validateForm =async(data)=>{
             const errors = this.state.error;
@@ -88,7 +80,12 @@ class Login extends React.Component{
             requiredFields.forEach(field => {
                 if (!data[ field ]) {
                 errors[ field ] = 'Required'
-                }                
+                } 
+                if(field === 'user'){
+                    if (!data[ field ].trim()) {
+                        errors[ field ] = 'Required'
+                    }  
+                }               
             })
             if (data.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
                 errors.email = 'Invalid email address'
@@ -129,42 +126,42 @@ class Login extends React.Component{
         submit =async(e)=>{
             e.preventDefault();
             this.setState({loading : true});
-                let error = await this.validateForm(this.state.data);                                       
-                if(!this.checkProperties(error)){
-                    this.setState({error});
-                }
-                else{
-                    const {data} = this.state;
-                    if(this.state.type===1){
-                        let result = await this.props.signIn(data.email.toLowerCase(),md5(data.password));                        
-                        if(!result){
-                            this.props.close(true);
-                        }
-                        else{
-                            this.setState({warning : result});
-                        }
+            let error = await this.validateForm(this.state.data);                                       
+            if(!checkProperties(error)){
+                this.setState({error});
+            }
+            else{
+                const {data} = this.state;
+                if(this.state.type===1){
+                    let result = await this.props.signIn(data.email.toLowerCase(),md5(data.password));                        
+                    if(!result){
+                        this.props.close(true);
                     }
-                    if(this.state.type===0){
-                        const user = {
-                            username : data.user.toLowerCase(),
-                            email : data.email,
-                            password : md5(data.password)
-                        }; 
-                        let result = await this.props.sigUp(user);                        
-                        if(!result){
-                            this.props.close(true);
-                        }
-                        else{
-                            this.setState({warning : result});
-                        }
+                    else{
+                        this.setState({warning : result});
                     }
-                    if(this.state.type===2){
-                        let result = await passwordReset(data.email.toLowerCase(),md5(data.password));                                                
-                        this.changePage(2);
-                        this.setState({warning : result});                        
-                    }                    
                 }
-                this.setState({loading : false});
+                if(this.state.type===0){
+                    const user = {
+                        username : data.user.trim(),
+                        email : data.email.toLowerCase(),
+                        password : md5(data.password)
+                    }; 
+                    let result = await this.props.sigUp(user);                        
+                    if(!result){
+                        this.props.close(true);
+                    }
+                    else{
+                        this.setState({warning : result});
+                    }
+                }
+                if(this.state.type===2){
+                    let result = await passwordReset(data.email.toLowerCase(),md5(data.password));                                                
+                    this.changePage(2);
+                    this.setState({warning : result});                        
+                }                    
+            }
+            this.setState({loading : false});
         }
 
     render(){
