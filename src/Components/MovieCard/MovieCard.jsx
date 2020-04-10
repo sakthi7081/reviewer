@@ -47,7 +47,7 @@ const MovieCard = ({movie}) => {
                 image={movie.img === '' ? Img : movie.img}   
                 src={movie.img_name ? movie.img_name : ''}
                 />
-                <CardContent>
+                <CardContent style={{height: '180px'}}>
                 <Typography variant="h5" component="h1" >
                     {movie.name}
                 </Typography>
