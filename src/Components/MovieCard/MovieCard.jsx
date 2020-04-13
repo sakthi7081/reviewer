@@ -39,7 +39,7 @@ export const  MovieSkeleton = () => {
 
 
 const MovieCard = ({movie}) => {    
-    const rating = movie.ratings.map(value=> value.rating).reduce(((a,b)=> a+b),0);
+    const rating = movie.ratings.map(value=> value.rating).reduce(((a,b)=> a+b),0);    
     return (        
         <Card >
             <CardActionArea>

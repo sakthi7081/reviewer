@@ -31,7 +31,7 @@ class HomePage extends Component {
 
     render() {
         const {open} = this.state;
-        const {movies,logged,loading} = this.props;
+        const {movies,search,logged,loading} = this.props;
         return (
             <StyledBox>
                 <Hidden  only={['sm','md','lg','xl']}>                    
@@ -53,7 +53,9 @@ class HomePage extends Component {
                 {logged && <AddMovie open={open} close={this.changeWarningModel}/>}
               <Grid container direction={'row'} spacing={2}>                
                     {!loading &&
-                         movies.map(movie => 
+                         movies.filter(item =>
+                            (item.name.toLowerCase()).includes(search.toLowerCase())
+                          ).map(movie => 
                             <Grid key={movie._id} item xs={12}  sm={4} md={3} lg={3}>
                                  <MovieCard movie={movie}/> 
                             </Grid>
@@ -74,7 +76,8 @@ const mapStateToProps = (state) => {
     return {
       movies : state.home.movies,
       logged : state.home.logged,
-      loading : state.home.loading
+      loading : state.home.loading,
+      search : state.home.search
     }
   };
   

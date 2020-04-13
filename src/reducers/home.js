@@ -4,7 +4,8 @@ const initialState = {
     user : JSON.parse(localStorage.getItem('users')),
     logged : JSON.parse(localStorage.getItem('users')) !== null, 
     loading : true,
-    movies : []    
+    movies : [],
+    search : ''    
   };
   
   export default function reducer(state = initialState, action) {
@@ -14,6 +15,11 @@ const initialState = {
           ...state,
           movies : action.movies,
           loading : false
+      }
+      case types.SEARCH_MOVIE: 
+      return {
+          ...state,
+          search : action.value,          
       }
       case types.GET_USER: 
       return {

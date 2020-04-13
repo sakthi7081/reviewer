@@ -26,10 +26,16 @@ const getMovies = movies => ({
     type: types.GET_USER,
     user
   })
+
+  export const dispatchState =(type,value)=> dispatch => {    
+      dispatch({type : type,value : value});
+  }
   
   export const getAllMovies = () => dispatch => {    
     collection('Movies').find({}).toArray().then(
-        movies => dispatch(getMovies(movies))
+        movies => dispatch(getMovies(movies.sort(function(a,b){          
+          return new Date(b.date) - new Date(a.date);
+        })))
     ).catch(err => console.log(err))
   }
   
@@ -56,8 +62,7 @@ export const sigUp =(user)=> dispatch => {
 export const createMovie =(movie)=> dispatch=>{  
      collection('Movies').insertOne(movie)    
     .then(data=> 
-          dispatch({type : types.CREATE_MOVIE,
-                movie : {_id: data.insertedId,...movie}})
+          dispatch(getAllMovies())
       ).catch(err=> console.log(`Movie Creation - ${err}`));
 }
 

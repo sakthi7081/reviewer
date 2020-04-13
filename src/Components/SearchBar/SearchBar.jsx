@@ -1,17 +1,22 @@
 import React from 'react';
 import {StyledPaper,StyledInput} from './SearchBar.css';
 import propTypes from 'prop-types'; 
-import IconButton  from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+import { connect } from "react-redux";
+import {SEARCH_MOVIE} from '../../Utilities/ActionTypes';
+import {dispatchState} from '../../actions';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
-
-export default function SearchBar({width,placeholder}){
+function SearchBar({width,placeholder,dispatchState,search}){
+        const handleChange = (event) => dispatchState(SEARCH_MOVIE,event.target.value);
         return (
             <StyledPaper width={width} >                            
-                <StyledInput width={width-50} placeholder={placeholder} />
-                <IconButton size="small" type="submit">
-                    <SearchIcon />
-                </IconButton>                        
+                <StyledInput width={width-20} placeholder={placeholder}                 
+                    startAdornment= 
+                      {<InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>}                    
+                value={search} onChange={handleChange}/>                
             </StyledPaper>
                 
         )}
@@ -19,3 +24,11 @@ export default function SearchBar({width,placeholder}){
 SearchBar.propTypes = {
         name : propTypes.string
 }
+
+const mapStateToProps = (state) => {       
+    return {      
+      search : state.home.search
+    }
+  };
+
+export default connect(mapStateToProps,{dispatchState})(SearchBar);

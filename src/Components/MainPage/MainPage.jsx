@@ -1,7 +1,7 @@
 import React  from 'react';
 import Header from '../../Containers/Header/Header';
 import HomePage from '../../Containers/HomePage/HomePage';
-import { BrowserRouter as Router, Route,Switch } from 'react-router-dom';
+import { HashRouter as Router, Route,Switch } from 'react-router-dom';
 
 function Mainpage({load}){
     return(

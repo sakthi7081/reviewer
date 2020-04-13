@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MovieCard should render Movie Card 1`] = `
+<WithStyles(ForwardRef(Card))>
+  <WithStyles(ForwardRef(CardActionArea))>
+    <Styled(WithStyles(ForwardRef(CardMedia)))
+      image="blank_poster.jpg"
+      src=""
+    />
+    <WithStyles(ForwardRef(CardContent))
+      style={
+        Object {
+          "height": "180px",
+        }
+      }
+    >
+      <WithStyles(ForwardRef(Typography))
+        component="h1"
+        variant="h5"
+      >
+        The eagle eye
+      </WithStyles(ForwardRef(Typography))>
+      <WithStyles(ForwardRef(Typography))
+        display="block"
+        gutterBottom={true}
+        variant="caption"
+      >
+        4/13/2020 ● English
+      </WithStyles(ForwardRef(Typography))>
+      <WithStyles(WithStyles(ForwardRef(Rating)))
+        icon={
+          <UNDEFINED
+            fontSize="inherit"
+          />
+        }
+        precision={0.5}
+        readOnly={true}
+        value={5}
+      />
+      <Styled(WithStyles(ForwardRef(Typography)))
+        component="p"
+        variant="body2"
+      >
+        Eagle eye
+      </Styled(WithStyles(ForwardRef(Typography)))>
+    </WithStyles(ForwardRef(CardContent))>
+  </WithStyles(ForwardRef(CardActionArea))>
+</WithStyles(ForwardRef(Card))>
+`;
