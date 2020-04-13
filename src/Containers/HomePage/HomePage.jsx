@@ -65,7 +65,9 @@ class HomePage extends Component {
                                  <MovieSkeleton/> 
                             </Grid>
                     )}
-                    {!loading && movies.length < 1 && <StyledAlert severity="info">No movies found</StyledAlert>}    
+                    {!loading && movies.filter(item =>
+                            (item.name.toLowerCase()).includes(search.toLowerCase())
+                          ).length < 1 && <StyledAlert severity="info">No movies found</StyledAlert>}    
              </Grid>                        
             </StyledBox>                                                                       
         );
