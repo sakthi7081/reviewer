@@ -19,5 +19,5 @@ export const StyledSearchBox = styled('div')`
 `
 
 export const StyledButton = styled(Button)`
-        float : ${props => props.float ? props.float : ''}
+        float : ${props => props.float ? props.float : ''}       
 `

@@ -4,9 +4,13 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import {Card,CardActionArea,CardContent,Typography} from '@material-ui/core';
 import Img from '../../Utilities/blank_poster.jpg';
 import Skeleton from '@material-ui/lab/Skeleton';
+import {useHistory } from 'react-router-dom';
+import { connect } from "react-redux";
+import {dispatchState} from '../../actions';
+import {SEARCH_MOVIE} from '../../Utilities/ActionTypes';
 
 export const  MovieSkeleton = () => {        
-    return (        
+    return (                
         <Card >
             <CardActionArea>
                 <Skeleton animation="wave" height={350} variant="rect" />
@@ -38,10 +42,13 @@ export const  MovieSkeleton = () => {
 }
 
 
-const MovieCard = ({movie}) => {    
-    const rating = movie.ratings.map(value=> value.rating).reduce(((a,b)=> a+b),0);    
-    return (        
-        <Card >
+const MovieCard = ({movie,dispatchState}) => {    
+    const rating = movie.ratings.map(value=> value.rating).reduce(((a,b)=> a+b),0)/movie.ratings.length;    
+    let history = useHistory();
+    const movieClick = (name) => {history.push('/'+name);dispatchState(SEARCH_MOVIE,'')};
+
+    return (             
+        <Card onClick={() => movieClick(movie.name)}>
             <CardActionArea>
                 <StyledCardMedia                
                 image={movie.img === '' ? Img : movie.img}   
@@ -65,9 +72,9 @@ const MovieCard = ({movie}) => {
                 </StyledSynopsis>
                 </CardContent>
             </CardActionArea>            
-        </Card>        
+        </Card>                
     );
 }
 
 
-export default MovieCard;
+export default connect(null,{dispatchState})(MovieCard);

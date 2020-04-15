@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
-import {StyledBox,StyledSearchBox,StyledButton,StyledAlert} from './HomePage.css';
+import {StyledSearchBox,StyledButton,StyledAlert} from './HomePage.css';
 import MovieCard,{MovieSkeleton} from '../../Components/MovieCard/MovieCard';
 import {SEARCH_PLACEHOLDER} from '../../Utilities/Constants';
 import Hidden from '@material-ui/core/Hidden';
@@ -8,7 +8,6 @@ import SearchBar from '../../Components/SearchBar/SearchBar';
 import AddIcon from '@material-ui/icons/Add';
 import WarningModal from '../../Components/WarningModal/WarningModal';
 import { connect } from "react-redux";
-import {getAllMovies} from '../../actions';
 import AddMovie from '../AddMovie/AddMovie';
 
 class HomePage extends Component {
@@ -16,11 +15,8 @@ class HomePage extends Component {
             constructor(props) {
                 super(props);
                 this.state = { open : false }
-            }
+            }           
             
-            componentDidMount(){                
-                this.props.getAllMovies();
-            }
 
             changeWarningModel = () => {
                      this.setState((state) => ({
@@ -33,7 +29,7 @@ class HomePage extends Component {
         const {open} = this.state;
         const {movies,search,logged,loading} = this.props;
         return (
-            <StyledBox>
+            <>
                 <Hidden  only={['sm','md','lg','xl']}>                    
                     <StyledSearchBox>
                         <SearchBar width={300} placeholder={SEARCH_PLACEHOLDER} />                            
@@ -69,7 +65,7 @@ class HomePage extends Component {
                             (item.name.toLowerCase()).includes(search.toLowerCase())
                           ).length < 1 && <StyledAlert severity="info">No movies found</StyledAlert>}    
              </Grid>                        
-            </StyledBox>                                                                       
+            </>                                                                       
         );
     }
 }
@@ -83,4 +79,4 @@ const mapStateToProps = (state) => {
     }
   };
   
-  export default connect(mapStateToProps,{getAllMovies})(HomePage);
+  export default connect(mapStateToProps)(HomePage);

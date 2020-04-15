@@ -12,7 +12,7 @@ import {StyledRating} from '../../Components/MovieCard/MovieCard.css';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { MuiPickersUtilsProvider,KeyboardDatePicker  } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import {checkProperties,validateMovie,toBase64,createMovie} from '../../actions';
+import {checkProperties,validateMovie,toBase64,createMovie,updateMovie,Base64toFile} from '../../actions';
 
 
 const languages = [
@@ -29,7 +29,7 @@ const IntialState = {
     rating : 0,
     releaseDate : new Date(),
     language : 'Other',
-    error : {}
+    error : {}    
 };    
 
 
@@ -47,6 +47,31 @@ class AddMovie extends React.Component{
         window.addEventListener('resize', this.handleResize)
     }
 
+    shouldComponentUpdate(nextProps){
+       if(this.props.open !== nextProps.open){ 
+            let movie = nextProps.movies.filter(movie => movie._id === nextProps.id)[0];
+            if(nextProps.review && nextProps.update){
+                    if(nextProps.reviewed){                        
+                        let review = movie.ratings.filter(rating => rating.id.toString() === this.props.user._id.toString())[0];
+                        this.setState({                            
+                            comment : review.comment,                                                        
+                            rating : review.rating
+                        });                                  
+                    } 
+            }
+            else if(!nextProps.review && nextProps.update){
+                this.setState({
+                    movieName : movie.name,
+                    synopsis : movie.description,                                                                             
+                    releaseDate : new Date(movie.date),
+                    language : movie.language,
+                    file : movie.img ? Base64toFile(movie.img,movie.img_name) : ''
+                });
+            }
+       }       
+      return true;
+    }
+
     onInputChange = event => { const error = this.state.error; 
                                delete error[event.target.name]; 
                                this.setState({ [event.target.name]: event.target.value, error}); }; 
@@ -62,19 +87,94 @@ class AddMovie extends React.Component{
     validate =async()=> {
         const error = {};
         const {movieName,synopsis} = this.state;
+        const {update,name} = this.props;
         if(!movieName.trim()){
             error['movieName'] = 'Required';
         }
         else{
-            let result = await validateMovie(movieName.trim());
-            if(result){
-                error['movieName'] = 'Name already exist';
-            }            
+            if(update && name.toLowerCase() !== movieName.toLowerCase()){
+                let result = await validateMovie(movieName.trim());
+                if(result){
+                    error['movieName'] = 'Name already exist';
+                }
+            }
+            if(!update){
+                let result = await validateMovie(movieName.trim());
+                if(result){
+                    error['movieName'] = 'Name already exist';
+                }
+            }                                    
         }
         if(!synopsis.trim()){
             error['synopsis'] = 'Required';
         }       
         return error; 
+    }
+
+    submitUpdate = async(e) => {
+        e.preventDefault();
+        this.setState({loading : true});
+        let {update, review, reviewed,id,user,movies} = this.props;
+        let movie = movies.filter(movie => movie._id === id)[0];
+        const {file,releaseDate,language,movieName,comment,synopsis,rating} = this.state;
+        if(update && !review){
+            let error = await this.validate();
+            if(!checkProperties(error)){
+                this.setState({error});
+            }
+            else{
+                let Movie = {
+                    name : movieName,
+                    description : synopsis,
+                    language : language,
+                    date : releaseDate,
+                    img : file ? await toBase64(file) : '',
+                    img_name : file ? file.name : '',
+                    updated_on : new Date(),
+                    updated_by : {id : user._id, username : user.username}                   
+                }; 
+                let updateData = {  $set: Movie};                 
+                    movie = Object.assign({}, movie, Movie);;
+                    let updateMovie = {
+                        id : id,
+                        movie : movie
+                    };
+                    await this.props.updateMovie(id,updateData,updateMovie);  
+                    this.onClose(true);
+            }     
+        }else{
+            if(reviewed){                
+                let index = movie.ratings.findIndex(rating => rating.id === user._id.toString());
+                let Rating = movie.ratings[index];
+                if(Rating.comment.toLowerCase() !== comment.toLowerCase() || Rating.rating !== rating){
+                    Rating = {...Rating,comment,rating };
+                    let updateData = {  $set: { ['ratings.'+ index] : Rating}};                 
+                    movie = {...movie, ratings : movie.ratings.map(rating => rating.id === Rating.id ? Rating : rating)};
+                    let updateMovie = {
+                        id : id,
+                        movie : movie
+                    };
+                    await this.props.updateMovie(id,updateData,updateMovie);  
+                    this.onClose(true);                 
+                }         
+                else{
+                    this.onClose();    
+                }                       
+            }
+            else{
+                let Rating = { rating : rating, comment : comment, username : user.username,id : user._id};
+                let updateData = {  $push: { ratings: Rating}};                 
+                movie.ratings.push(Rating);
+                let updateMovie = {
+                    id : id,
+                    movie : movie
+                };
+                await this.props.updateMovie(id,updateData,updateMovie);
+                this.onClose(true);    
+            }
+
+        }
+        this.setState({loading : false});
     }
 
     submit =async(e)=> {
@@ -104,24 +204,30 @@ class AddMovie extends React.Component{
         this.setState({loading : false});
     }
 
-    onClose =()=>{
+    onClose =(update = false)=>{
         let size = this.state.size;
         this.setState(IntialState);
         this.setState({size});
-        this.props.close();
+        if(this.props.update){
+            this.props.close(update);
+        }
+        else{
+            this.props.close();
+        }        
     }
 
   render() {
-     const {open} = this.props;
+     const {open,update,review, reviewed} = this.props;
      const {loading,size,file,releaseDate,language,movieName,comment,synopsis,rating,error} = this.state;
     return (
       <>
        <StyledModal open={open}>
             <StyledCard>                
-                <StyledHeader title="Submit Movie" avatar={<MovieCreationIcon/>}/>   
+                <StyledHeader title={!update ? "Submit Movie" : review ? reviewed ? "Update Review" : "Add Review" : "Update Movie"} avatar={<MovieCreationIcon/>}/>   
                 <Divider />       
                 <CardContent>    
                 <Grid container spacing={1}>
+                        {!review && <> 
                         <Hidden only="xs">
                             <StyledGrid  item xs={12} sm={4} md={3}>
                                 Movie Name
@@ -208,6 +314,8 @@ class AddMovie extends React.Component{
                                 />                                
                             </MuiPickersUtilsProvider>
                         </DisplayGrid> 
+                        </>}
+                        {(!update || review) && <>
                         <Hidden only="xs">
                             <StyledGrid  item xs={12} sm={4} md={3}>
                                 Comments
@@ -237,7 +345,9 @@ class AddMovie extends React.Component{
                             icon={<FavoriteIcon fontSize="inherit" />}    
                             onChange={this.onRatingChange}                        
                             />
-                        </Grid>                         
+                        </Grid>  
+                        </>}                   
+                        {!review && <>                         
                         <Hidden only="xs">
                             <StyledGrid  item xs={12} sm={4} md={3}>
                                 Movie Poster
@@ -263,7 +373,8 @@ class AddMovie extends React.Component{
                                 Upload
                                 </Button>
                             </label>                                
-                        </DisplayGrid>                                                                  
+                            </DisplayGrid> 
+                            </>}                                                             
                     </Grid>                            
                 </CardContent> 
                 <Divider />          
@@ -275,7 +386,7 @@ class AddMovie extends React.Component{
                             color="primary" 
                             size='small'  
                             disabled={loading}
-                            onClick={this.submit}             
+                            onClick={update ? this.submitUpdate : this.submit}             
                             >
                             Submit
                         </StyledButton>
@@ -301,8 +412,9 @@ class AddMovie extends React.Component{
 
 const mapStateToProps = (state) => {       
     return {
-      user : state.home.user      
+      user : state.home.user,
+      movies : state.home.movies      
     }
   };
   
-  export default connect(mapStateToProps,{createMovie})(AddMovie);
+  export default connect(mapStateToProps,{createMovie,updateMovie})(AddMovie);

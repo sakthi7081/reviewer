@@ -1,5 +1,4 @@
 import React from 'react';
-// import propTypes from 'prop-types';
 import {APP_NAME,SEARCH_PLACEHOLDER} from '../../Utilities/Constants';
 import {Grid ,Toolbar,AppBar} from '@material-ui/core';
 import {TextBox,HeaderBox,StyledGrid,StyledButton} from './Header.css';
@@ -12,6 +11,7 @@ import MenuList from '../../Components/Menu/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { connect } from "react-redux";
 import {logout} from '../../actions';
+import {getAllMovies} from '../../actions';
 
 const mapStateToProps = (state) => {       
     return {
@@ -35,20 +35,27 @@ const LoginUsers = [ { Component :  <LoginButton /> } ];
 
 class Header extends React.Component{
 
+    componentDidMount(){                
+        this.props.getAllMovies();
+        if(window.location.hash !== '#/'){
+            window.location = '#';
+        }        
+    }
+
     render(){
             const {logged} = this.props;
         return (
         <HeaderBox>
             <AppBar position='sticky' color='primary'>
-                <Toolbar>  
+                <Toolbar variant="dense">  
                         <Hidden only="xs">                                           
                             <Grid item xs={2} >
-                                <TextBox>{APP_NAME}</TextBox>
+                                <TextBox href={'#'}>{APP_NAME}</TextBox>
                             </Grid> 
                         </Hidden>
                         <Hidden only={['sm','md','lg','xl']}>                            
                             <Grid item xs={11}>
-                                 <TextBox>{APP_NAME}</TextBox>
+                                 <TextBox href={'#'}>{APP_NAME}</TextBox>
                             </Grid>
                         </Hidden>                                                          
                         <Hidden only="xs">
@@ -78,10 +85,4 @@ class Header extends React.Component{
 
 }
 
-// Header.propTypes = {
-    
-// }
-
-
-
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps,{getAllMovies})(Header);

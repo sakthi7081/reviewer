@@ -8,7 +8,10 @@ import {dispatchState} from '../../actions';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
 function SearchBar({width,placeholder,dispatchState,search}){
-        const handleChange = (event) => dispatchState(SEARCH_MOVIE,event.target.value);
+        const handleChange = (event) => {dispatchState(SEARCH_MOVIE,event.target.value);
+            if(window.location.pathname === '/'){
+            window.location = '#'}
+        };
         return (
             <StyledPaper width={width} >                            
                 <StyledInput width={width-20} placeholder={placeholder}                 

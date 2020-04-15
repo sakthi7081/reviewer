@@ -6,10 +6,14 @@ export const HeaderBox = styled('div')({
         textAlign: 'center'        
 })
 
-export const TextBox = styled('div')({
-        fontFamily : "'Permanent Marker', cursive",
-        fontSize : '24px'              
-})
+export const TextBox = styled(Button)`
+        &&&{                
+                font-family : 'Permanent Marker', cursive;
+                font-size : 24px;
+                color : #fff;
+        }
+`             
+
 
 export const StyledGrid =  styled('div')({
         float : 'right'      

@@ -21,6 +21,11 @@ const initialState = {
           ...state,
           search : action.value,          
       }
+      case types.UPDATE_MOVIE: 
+      return {
+          ...state,
+          movies : state.movies.map(movie => movie._id.toString() === action.data.id.toString() ? action.data.movie : movie),          
+      }      
       case types.GET_USER: 
       return {
           ...state,

@@ -27,6 +27,7 @@
     "path": "^0.12.7",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
+    "react-circular-progressbar": "^2.0.3",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
@@ -49,7 +50,9 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "snapshotSerializers": ["enzyme-to-json/serializer"],
+  "snapshotSerializers": [
+    "enzyme-to-json/serializer"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",

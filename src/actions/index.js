@@ -66,6 +66,12 @@ export const createMovie =(movie)=> dispatch=>{
       ).catch(err=> console.log(`Movie Creation - ${err}`));
 }
 
+export const updateMovie =(id,update,movie)=> dispatch=>{  
+  dispatch({type : types.UPDATE_MOVIE, data : movie});
+  collection('Movies').updateOne({_id : id},update)    
+ .then(data=>  data).catch(err=> console.log(`Movie update - ${err}`));
+}
+
 export const passwordReset =(mail,password) => {
     return collection('Users').updateOne({email : mail},{$set:{password : password}})        
     .then(result => {
@@ -99,3 +105,17 @@ export const toBase64 = file => new Promise((resolve, reject) => {
   reader.onload = () => resolve(reader.result);
   reader.onerror = error => reject(error);
 });
+
+export const Base64toFile =(dataurl, filename) =>{
+ 
+  var arr = dataurl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), 
+      n = bstr.length, 
+      u8arr = new Uint8Array(n);
+      
+  while(n--){
+      u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, {type:mime});
+}
