@@ -144,10 +144,10 @@ class AddMovie extends React.Component{
             }     
         }else{
             if(reviewed){                
-                let index = movie.ratings.findIndex(rating => rating.id === user._id.toString());
-                let Rating = movie.ratings[index];
+                let index = movie.ratings.findIndex(rating => rating.id.toString() === user._id.toString());                                
+                let Rating = movie.ratings[index];                
                 if(Rating.comment.toLowerCase() !== comment.toLowerCase() || Rating.rating !== rating){
-                    Rating = {...Rating,comment,rating };
+                    Rating = {...Rating,comment : comment,rating : rating };
                     let updateData = {  $set: { ['ratings.'+ index] : Rating}};                 
                     movie = {...movie, ratings : movie.ratings.map(rating => rating.id === Rating.id ? Rating : rating)};
                     let updateMovie = {
