@@ -45,7 +45,7 @@ export const  MovieSkeleton = () => {
 const MovieCard = ({movie,dispatchState}) => {    
     const rating = movie.ratings.map(value=> value.rating).reduce(((a,b)=> a+b),0)/movie.ratings.length;    
     let history = useHistory();
-    const movieClick = (name) => {history.push('/'+name);dispatchState(SEARCH_MOVIE,'')};
+    const movieClick = (name) => {history.push('/'+name);window.scrollTo(0,0);dispatchState(SEARCH_MOVIE,'')};
 
     return (             
         <Card onClick={() => movieClick(movie.name)}>

@@ -26,27 +26,37 @@ class Movie extends Component {
             }            
         }
 
-        updateData = () => {
-            const {movies,logged,user} = this.props;
+        updateData = (props) => {
+            const {movies,logged,user} = props;
             let name = this.props.match.params.movie;
             if(movies.length > 0){
                 let movie = movies.filter(movie => movie.name === name )[0];
                 if(logged){                                        
                     let isReviewed = movie.ratings.filter(review => review.id.toString() === user._id.toString()).length > 0;       
                     this.setState({isReviewed});
-                }                
+                }  
+                else{
+                    this.setState({isReviewed : false}); 
+                }              
                 this.setState({movie});     
                 
             }
         }
         
         componentDidMount(){
-             this.updateData();           
+             this.updateData(this.props);           
         }        
+
+        shouldComponentUpdate(nextProps){            
+            if(this.props.logged !== nextProps.logged){
+                this.updateData(nextProps);                   
+            }
+            return true;
+        }
 
         changeWarningModel = (set = false) => {            
             if(set === true){
-                this.updateData(); 
+                this.updateData(this.props); 
             }            
             this.setState((state) => ({
                 open : !state.open
@@ -55,7 +65,7 @@ class Movie extends Component {
 
         changeRatingModel = (set = false) => {              
             if(set === true){                
-                this.updateData(); 
+                this.updateData(this.props); 
             }          
             this.setState((state) => ({
                 open : !state.open,
